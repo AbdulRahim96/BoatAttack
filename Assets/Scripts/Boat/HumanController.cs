@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace BoatAttack
 {
@@ -12,9 +14,8 @@ namespace BoatAttack
 
         private float _throttle;
         private float _steering;
-
         private bool _paused;
-        
+        public int value;
         private void Awake()
         {
             _controls = new InputControls();
@@ -29,7 +30,9 @@ namespace BoatAttack
             _controls.BoatControls.Pause.performed += FreezeBoat;
 
             _controls.DebugControls.TimeOfDay.performed += SelectTime;
+            value = PlayerPrefs.GetInt("controls", 0);
         }
+
 
         public override void OnEnable()
         {
@@ -69,9 +72,39 @@ namespace BoatAttack
 
         void FixedUpdate()
         {
+            switch (value)
+            {
+                case 0: _throttle = ControlsManager.instance.rightSlider.value;
+                    _steering = ControlsManager.instance.leftJoyStick.Horizontal;
+                    break;
+
+                case 1:
+                    _throttle = ControlsManager.instance.rightJoyStick.Vertical;
+                    _steering = ControlsManager.instance.leftJoyStick.Horizontal;
+                    break;
+
+                case 2:
+                    _throttle = ControlsManager.instance.rightSlider.value;
+                    _steering = ControlsManager.instance.leftSlider.value;
+                    break;
+
+                case 3:
+                    _throttle = ControlsManager.instance.rightJoyStick.Vertical;
+                    _steering = ControlsManager.instance.rightJoyStick.Horizontal;
+                    break;
+
+                case 4:
+                    _throttle = ControlsManager.instance.leftJoyStick.Vertical;
+                    _steering = ControlsManager.instance.leftJoyStick.Horizontal;
+                    break;
+            }
+
+
             engine.Accelerate(_throttle);
             engine.Turn(_steering);
         }
+
+        
     }
 }
 

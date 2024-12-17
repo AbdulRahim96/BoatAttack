@@ -147,7 +147,8 @@ namespace BoatAttack
         
         public static void SetGameType(GameType gameType)
         {
-            RaceData = new Race {game = gameType,
+            RaceData = new Race {
+                game = gameType,
                 boats = new List<BoatData>(),
                 boatCount = 4,
                 laps = 3,
